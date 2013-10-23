@@ -2,6 +2,8 @@
 # Generate a minimal filesystem for archlinux and load it into the local
 # docker as "archlinux"
 # requires root
+set -e
+set -x
 
 PACSTRAP=$(which pacstrap)
 [ "$PACSTRAP" ] || {
