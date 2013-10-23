@@ -15,7 +15,11 @@ EXPECT=$(which expect)
     exit 1
 }
 
-ROOTFS=~/rootfs-arch-$$-$RANDOM
+WORKDIR="${1:-~}"
+NAME="${2:-archlinux}"
+IMPORT=yes
+[ "$3" = "-no-import" ] && IMPORT=
+ROOTFS="$WORKDIR/rootfs-arch-$$-$RANDOM"
 mkdir $ROOTFS
 
 #packages to ignore for space savings
@@ -62,6 +66,11 @@ mknod -m 666 ${DEV}/full c 1 7
 mknod -m 600 ${DEV}/initctl p
 mknod -m 666 ${DEV}/ptmx c 5 2
 
-tar -C $ROOTFS -c . | docker import - archlinux
-docker run -i -t archlinux echo Success.
+if [ "$IMPORT" ]; then
+  tar -C "$ROOTFS" -c . | docker import - "$NAME"
+  docker run -i -t "$NAME" echo Success.
+else
+  tar -C $ROOTFS -c . > "$WORKDIR/$NAME.tar"
+fi
+
 rm -rf $ROOTFS
