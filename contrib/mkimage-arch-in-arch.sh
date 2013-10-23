@@ -10,4 +10,4 @@ dir=$(dirname $(readlink -f $0))
 
 cp "$dir/mkimage-arch.sh" "$WORKDIR/mkimage-arch.sh"
 
-docker run -v="$WORKDIR:/workdir" "$IMAGE" bash /workdir/mkimage-arch.sh /workdir "$NAME" -no-import
+docker run -privileged -v="$WORKDIR:/workdir" "$IMAGE" bash /workdir/mkimage-arch.sh /workdir "$NAME" -no-import
